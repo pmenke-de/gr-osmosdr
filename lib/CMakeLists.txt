@@ -43,8 +43,15 @@ GR_OSMOSDR_APPEND_SRCS(
     time_spec.cc
 )
 
+#-pthread Adds support for multithreading with the pthreads library.
+#This option sets flags for both the preprocessor and linker. (man gcc)
+if(CMAKE_COMPILER_IS_GNUCXX)
+    list(APPEND Boost_LIBRARIES -pthread)
+endif()
+
 GR_OSMOSDR_APPEND_LIBS(
     ${Boost_LIBRARIES}
+    gnuradio::gnuradio-blocks
     ${GNURADIO_ALL_LIBRARIES}
 )
 
@@ -128,24 +135,9 @@ GR_INCLUDE_SUBDIRECTORY(osmosdr)
 endif(ENABLE_OSMOSDR)
 
 ########################################################################
-# Setup FCD component
-########################################################################
-GR_REGISTER_COMPONENT("FUNcube Dongle" ENABLE_FCD GNURADIO_FCD_FOUND)
-GR_REGISTER_COMPONENT("FUNcube Dongle Pro+" ENABLE_FCDPP GNURADIO_FCDPP_FOUND)
-if(ENABLE_FCD)
-add_definitions(-DHAVE_FCD=1)
-endif(ENABLE_FCD)
-if(ENABLE_FCDPP)
-add_definitions(-DHAVE_FCDPP=1)
-endif(ENABLE_FCDPP)
-if(ENABLE_FCD OR ENABLE_FCDPP)
-GR_INCLUDE_SUBDIRECTORY(fcd)
-endif(ENABLE_FCD OR ENABLE_FCDPP)
-
-########################################################################
 # Setup File component
 ########################################################################
-GR_REGISTER_COMPONENT("IQ File Source & Sink" ENABLE_FILE GNURADIO_BLOCKS_FOUND)
+GR_REGISTER_COMPONENT("IQ File Source & Sink" ENABLE_FILE gnuradio-blocks_FOUND)
 if(ENABLE_FILE)
 GR_INCLUDE_SUBDIRECTORY(file)
 endif(ENABLE_FILE)
@@ -161,7 +153,7 @@ endif(ENABLE_RTL)
 ########################################################################
 # Setup RTL_TCP component
 ########################################################################
-GR_REGISTER_COMPONENT("RTLSDR TCP Client" ENABLE_RTL_TCP GNURADIO_BLOCKS_FOUND)
+GR_REGISTER_COMPONENT("RTLSDR TCP Client" ENABLE_RTL_TCP gnuradio-blocks_FOUND)
 if(ENABLE_RTL_TCP)
 GR_INCLUDE_SUBDIRECTORY(rtl_tcp)
 endif(ENABLE_RTL_TCP)
