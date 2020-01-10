@@ -51,8 +51,7 @@ endif()
 
 GR_OSMOSDR_APPEND_LIBS(
     ${Boost_LIBRARIES}
-# What is that needed for? Can't find anything about it...
-#    gnuradio::gnuradio-blocks
+    gnuradio::gnuradio-blocks
     ${GNURADIO_ALL_LIBRARIES}
 )
 
